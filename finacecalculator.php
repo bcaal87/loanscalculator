@@ -121,40 +121,44 @@ function mostrar_calculadora_financiera()
             padding: 20px;
             margin-top: 50px;
         }
-    </style>
+        </style>
 
 
     </head>
 
     <body>
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-6">
-                    <h2>Formulario de Calculadora</h2>
-                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
-                        <label for="monto_prestamo">Monto del crédito:</label>
-                        <input type="number" name="monto_prestamo" value="<?php echo $monto_prestamo; ?>" required><br><br>
-
-                        <label for="plazo_meses">Plazo en meses:</label>
-                        <input type="number" name="plazo_meses" value="<?php echo $plazo_meses; ?>" required><br><br>
-
-                        <label for="tipo_credito">Tipo de crédito:</label>
-                        <select name="tipo_credito" required>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2 class="mb-4">Formulario de Calculadora</h2>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
+                    <div class="mb-3">
+                        <label for="monto_prestamo" class="form-label">Monto del crédito:</label>
+                        <input type="number" name="monto_prestamo" class="form-control" value="<?php echo $monto_prestamo; ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="plazo_meses" class="form-label">Plazo en meses:</label>
+                        <input type="number" name="plazo_meses" class="form-control" value="<?php echo $plazo_meses; ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_credito" class="form-label">Tipo de crédito:</label>
+                        <select name="tipo_credito" class="form-select" required>
                             <option value="vehiculo" <?php if ($tipo_credito == 'vehiculo') echo 'selected'; ?>>Vehículo</option>
                             <option value="agricola" <?php if ($tipo_credito == 'agricola') echo 'selected'; ?>>Agrícola</option>
                             <option value="consumo" <?php if ($tipo_credito == 'consumo') echo 'selected'; ?>>Consumo</option>
-                        </select><br><br>
-
-                        <label for="tipo_cuota">Tipo de cuota:</label>
-                        <select name="tipo_cuota" required>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_cuota" class="form-label">Tipo de cuota:</label>
+                        <select name="tipo_cuota" class="form-select" required>
                             <option value="nivelada" <?php if ($tipo_cuota == 'nivelada') echo 'selected'; ?>>Nivelada</option>
                             <option value="saldos" <?php if ($tipo_cuota == 'saldos') echo 'selected'; ?>>Sobre Saldos</option>
-                        </select><br><br>
-
-                        <button type="submit">Calcular</button>
-                        <button type="button" onclick="mostrarTablaPagos()">Ver tabla de pagos</button>
-                    </form>
-                </div>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Calcular</button>
+                    <button type="button" class="btn btn-secondary" onclick="mostrarTablaPagos()">Ver tabla de pagos</button>
+                </form>
+            </div>
 
                 <div class="col-md-6">
                     <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $error_message == '') : ?>
