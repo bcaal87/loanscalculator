@@ -18,7 +18,7 @@ function mostrar_calculadora_financiera() {
     $interes = 0;
     $cuota = 0;
     $error_message = '';
-
+  
     // Verificar si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener los datos del formulario
