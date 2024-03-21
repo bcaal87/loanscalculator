@@ -110,19 +110,18 @@ function mostrar_calculadora_financiera()
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
         <style>
-            /* Estilos directamente en el HTML */
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f0f0f0;
-                color: #333;
-            }
-
-            h1 {
-                color: #003F86;
-            }
-
-            /* Agrega más estilos según sea necesario */
-        </style>
+        /* Estilos CSS (SACARLO PARA MEJORAR LA ESTRUCTURA) */
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 50px;
+        }
+    </style>
 
 
     </head>
