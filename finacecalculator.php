@@ -7,6 +7,7 @@ Author: Prolink GT
 License: GPL v2 or later
 */
 
+
 // Función para mostrar el formulario de la calculadora financiera
 function mostrar_calculadora_financiera()
 {
@@ -19,7 +20,9 @@ function mostrar_calculadora_financiera()
     $interes = 0;
     $cuota = 0;
     $error_message = '';
+    $tabla_pagos = array(); // Inicializamos la variable $tabla_pagos como un array vacío
 
+    // Verificar si se ha enviado el formulario
     // Verificar si se ha enviado el formulario
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Obtener los datos del formulario
@@ -97,7 +100,13 @@ function mostrar_calculadora_financiera()
         if ($cuota <= 0) {
             $error_message = "Error al calcular la cuota. Por favor, verifica los datos ingresados.";
         }
+
+        // Mostrar la alerta si hay un error
+        if (!empty($error_message)) {
+            echo "<script>Swal.fire('Error', '$error_message', 'error');</script>";
+        }
     }
+
 ?>
 
     <!DOCTYPE html>
@@ -108,57 +117,45 @@ function mostrar_calculadora_financiera()
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Calculadora Financiera</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-        <style>
-        /* Estilos CSS (SACARLO PARA MEJORAR LA ESTRUCTURA) */
-        body {
-            background-color: #f8f9fa;
-        }
-        .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top: 50px;
-        }
-        </style>
-
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="assets/style.css">
+        <link rel="stylesheet" href="node_modules/sweetalert2/dist/sweetalert2.min.css">
     </head>
 
     <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <h2 class="mb-4">Formulario de Calculadora</h2>
-                <form method="post" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
-                    <div class="mb-3">
-                        <label for="monto_prestamo" class="form-label">Monto del crédito:</label>
-                        <input type="number" name="monto_prestamo" class="form-control" value="<?php echo $monto_prestamo; ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="plazo_meses" class="form-label">Plazo en meses:</label>
-                        <input type="number" name="plazo_meses" class="form-control" value="<?php echo $plazo_meses; ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tipo_credito" class="form-label">Tipo de crédito:</label>
-                        <select name="tipo_credito" class="form-select" required>
-                            <option value="vehiculo" <?php if ($tipo_credito == 'vehiculo') echo 'selected'; ?>>Vehículo</option>
-                            <option value="agricola" <?php if ($tipo_credito == 'agricola') echo 'selected'; ?>>Agrícola</option>
-                            <option value="consumo" <?php if ($tipo_credito == 'consumo') echo 'selected'; ?>>Consumo</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tipo_cuota" class="form-label">Tipo de cuota:</label>
-                        <select name="tipo_cuota" class="form-select" required>
-                            <option value="nivelada" <?php if ($tipo_cuota == 'nivelada') echo 'selected'; ?>>Nivelada</option>
-                            <option value="saldos" <?php if ($tipo_cuota == 'saldos') echo 'selected'; ?>>Sobre Saldos</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Calcular</button>
-                    <button type="button" class="btn btn-secondary" onclick="mostrarTablaPagos()">Ver tabla de pagos</button>
-                </form>
-            </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="mb-4">Formulario de Calculadora</h2>
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
+                        <div class="mb-3">
+                            <label for="monto_prestamo" class="form-label">Monto del crédito:</label>
+                            <input type="number" name="monto_prestamo" class="form-control" value="<?php echo $monto_prestamo; ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="plazo_meses" class="form-label">Plazo en meses:</label>
+                            <input type="number" name="plazo_meses" class="form-control" value="<?php echo $plazo_meses; ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo_credito" class="form-label">Tipo de crédito:</label>
+                            <select name="tipo_credito" class="form-select" required>
+                                <option value="vehiculo" <?php if ($tipo_credito == 'vehiculo') echo 'selected'; ?>>Vehículo</option>
+                                <option value="agricola" <?php
+                                                            if ($tipo_credito == 'agricola') echo 'selected'; ?>>Agrícola</option>
+                                <option value="consumo" <?php if ($tipo_credito == 'consumo') echo 'selected'; ?>>Consumo</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo_cuota" class="form-label">Tipo de cuota:</label>
+                            <select name="tipo_cuota" class="form-select" required>
+                                <option value="nivelada" <?php if ($tipo_cuota == 'nivelada') echo 'selected'; ?>>Nivelada</option>
+                                <option value="saldos" <?php if ($tipo_cuota == 'saldos') echo 'selected'; ?>>Sobre Saldos</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Calcular</button>
+                        <button type="button" class="btn btn-secondary" id="ver-tabla-pagos">Ver tabla de pagos</button>
+                    </form>
+                </div>
 
                 <div class="col-md-6">
                     <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $error_message == '') : ?>
@@ -183,41 +180,148 @@ function mostrar_calculadora_financiera()
             </div>
         </div>
 
-        <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $error_message == '') : ?>
-            <div id="tabla-pagos" style="display: none;">
-                <?php
-                // Mostrar la tabla de pagos si está disponible
-                if (isset($tabla_pagos) && !empty($tabla_pagos)) {
-                    echo '<h2>Tabla de Pagos:</h2>';
-                    echo '<table class="table table-bordered">';
-                    echo '<tr><th>No. Cuota</th><th>Cuota Capital</th><th>Interés</th><th>Cuota Total</th><th>Saldo del Préstamo</th></tr>';
-                    foreach ($tabla_pagos as $cuota) {
-                        echo '<tr>';
-                        foreach ($cuota as $valor) {
-                            echo '<td>' . $valor . '</td>';
-                        }
-                        echo '</tr>';
-                    }
-                    echo '</table>';
-                }
-                ?>
+  
+        <!-- Modal HTML -->
+        <div id="modal-form" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Ingrese sus datos</h2>
+                <form id="modal-form-data" action="plan_pago.php" method="POST"> <!-- Cambio aquí -->
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" required>
+                    <label for="correo">Correo:</label>
+                    <input type="email" id="correo" name="correo" required>
+                    <label for="dpi">DPI:</label>
+                    <input type="text" id="dpi" name="dpi" required>
+                    <button type="submit" class="btn">Enviar</button>
+                </form>
             </div>
-        <?php endif; ?>
+        </div>
 
-        <script>
-            function mostrarTablaPagos() {
-                var tablaPagos = document.getElementById('tabla-pagos');
-                if (tablaPagos.style.display === 'none') {
-                    tablaPagos.style.display = 'block';
-                } else {
-                    tablaPagos.style.display = 'none';
-                }
-            }
-        </script>
+
+
+        <!-- Contenedor de la tabla de pagos y botones -->
+        <div id="tabla-container" style="display: none;">
+            <div class="container">
+                <div id="tabla-pagos">
+                    <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $error_message == '') : ?>
+                        <?php if (isset($tabla_pagos) && !empty($tabla_pagos)) : ?>
+                            <h2>Tabla de Pagos:</h2>
+                            <table class="table table-bordered custom-table">
+                                <tr>
+                                    <th>No. Cuota</th>
+                                    <th>Cuota Capital</th>
+                                    <th>Interés</th>
+                                    <th>Cuota Total</th>
+                                    <th>Saldo del Préstamo</th>
+                                </tr>
+                                <?php foreach ($tabla_pagos as $cuota) : ?>
+                                    <tr>
+                                        <?php foreach ($cuota as $valor) : ?>
+                                            <td><?php echo $valor; ?></td>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                <div id="botones-container" style="display: none;">
+                    <button class="btn" id="descargar"><i class="fas fa-download"></i> Descargar</button>
+                    <button class="btn" id="resumen"><i class="fas fa-info-circle"></i> Completa </button>
+                    <button class="btn" id="ocultar"><i class="fas fa-eye-slash"></i> Ocultar</button>
+                    <button class="btn" id="enviar-correo"><i class="fas fa-envelope"></i> Enviar por correo</button>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="assets/funciones.js"></script>
         <!-- Enlace al archivo JavaScript de Bootstrap (opcional, solo si necesitas funcionalidades JS de Bootstrap) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
 
+
+        <script>
+            // Función para mostrar la tabla de pagos y los botones
+            function mostrarTablaPagos() {
+                var tablaContainer = document.getElementById('tabla-container');
+                var botonesContainer = document.getElementById('botones-container');
+                if (tablaContainer.style.display === 'none') {
+                    tablaContainer.style.display = 'block';
+                }
+                if (botonesContainer.style.display === 'none') {
+                    botonesContainer.style.display = 'flex'; // Mostrar los botones cuando se muestra la tabla
+                }
+            }
+
+            // Event listener para el botón "Ver tabla de pagos"
+            document.getElementById('ver-tabla-pagos').addEventListener('click', function() {
+                mostrarTablaPagos();
+            });
+
+            // Event listener para el botón de descargar
+            document.getElementById('descargar').addEventListener('click', function() {
+                // Mostrar el modal
+                var modal = document.getElementById('modal-form');
+                modal.style.display = 'block';
+
+                // Event listener para el formulario dentro del modal
+                document.getElementById('modal-form-data').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Evitar el envío del formulario
+
+                    // Verificar si los campos del formulario están llenos
+                    var nombre = document.getElementById('nombre').value;
+                    var telefono = document.getElementById('telefono').value;
+                    var correo = document.getElementById('correo').value;
+                    var dpi = document.getElementById('dpi').value;
+
+                    if (nombre !== '' && telefono !== '' && correo !== '' && dpi !== '') {
+                        // Si todos los campos están llenos, descargar el archivo
+                        descargarArchivo();
+                        // Ocultar el modal
+                        modal.style.display = 'none';
+                    } else {
+                        // Si algún campo está vacío, mostrar un mensaje de alerta
+                        alert('Por favor, complete todos los campos antes de continuar.');
+                    }
+                });
+            });
+
+            // Función para descargar el archivo
+            function descargarArchivo() {
+                // Obtener los datos del formulario
+                var formData = new FormData();
+                formData.append('monto_prestamo', document.getElementsByName('monto_prestamo')[0].value);
+                formData.append('plazo_meses', document.getElementsByName('plazo_meses')[0].value);
+                formData.append('tipo_credito', document.getElementsByName('tipo_credito')[0].value);
+                formData.append('tipo_cuota', document.getElementsByName('tipo_cuota')[0].value);
+
+                // Crear una solicitud AJAX
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'plan_pago.php', true);
+                xhr.responseType = 'blob'; // Esperamos una respuesta binaria (PDF)
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        // Crear un objeto URL para el blob
+                        var url = window.URL.createObjectURL(xhr.response);
+                        // Crear un enlace y simular clic para descargar el PDF
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'TablaPagos.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        // Limpiar el objeto URL después de descargar
+                        window.URL.revokeObjectURL(url);
+                    }
+                };
+                xhr.send(formData);
+            }
+        </script>
+
+
+    </body>
 
     </html>
 <?php
